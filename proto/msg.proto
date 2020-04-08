@@ -1,0 +1,84 @@
+syntax="proto3";
+package pb;
+option csharp_namespace="Pb";
+
+message SyncPid{
+    int32 Pid=1;
+    string Username=2;
+}
+
+message Player{
+    int32 Pid=1;
+    Position P=2;
+    string Username=3;
+}
+
+message SyncPlayers{
+    repeated Player ps=1;
+}
+
+message Position{
+    float X=1;
+    float Y=2;
+    float Z=3;
+    float V=4;
+    int32 BloodValue=5;
+}
+//速度向量
+message Velocity{
+    float X=1;
+    float Y=2;
+    float Z=3;
+}
+
+message BroadCast{
+    int32 Pid=1;
+    int32 Tp=2;
+    oneof Data {
+        string Content=3;
+        Position P=4;
+        int32 ActionData=5;
+    }
+    string Username=6;
+}
+
+message Talk{
+    string Content=1;
+}
+
+//释放技能
+message SkillTrigger{
+    int32 Pid=1;
+    int32 SkillId=2;
+    Position P=3;
+    //子弹速度
+    Velocity V=4;
+    int32 BulletId=5;
+}
+
+//技能的碰撞
+message SkillContact{
+    //攻击者ID
+    int32 SrcPid=1;
+    //被攻击者
+    int32 TargetPid=2;
+    int32 SkillId=3;
+    int32 BulletId=4;
+    //攻击坐标
+    Position ContactPos=5;
+}
+
+message ChangeWorldRequest{
+    int32 Pid=1;
+    int32 SrcId=2;
+    int32 TargetId=3;
+}
+
+message ChangeWorldResponse{
+    int32 Pid=1;
+    int32 ChangeRes=2;
+    int32 SrcId=3;
+    int32 TargetId=4;
+    //切换场景后的出生点
+    Position P=5;
+}

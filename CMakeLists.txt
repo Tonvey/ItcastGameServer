@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.10)
+project(game)
+set(CMAKE_CXX_STANDARD 11)
+IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    #静态编译
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static -pthread")
+ENDIF()
+include_directories(./proto ./)
+#产生protobuf文件
+#execute_process(COMMAND protoc --cpp_out= ${PROJECT_SOURCE_DIR}/proto/msg.proto)
+#通配文件名，最终赋值到srcs变量中
+file(GLOB srcs src/*.cpp proto/*.cc)
+add_executable(${PROJECT_NAME} ${srcs})
+IF (APPLE)
+    find_package(protobuf REQUIRED)
+    if(Protobuf_FOUND)
+        include_directories(${Protobuf_INCLUDE_DIRS})
+        target_link_libraries(${PROJECT_NAME} ${Protobuf_LIBRARIES})
+    else()
+        message("protobuf not found")
+    endif()
+ELSE()
+    target_link_libraries(${PROJECT_NAME} protobuf)
+ENDIF()
+
